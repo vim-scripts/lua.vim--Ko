@@ -3,7 +3,7 @@
 " Modified By: Raymond W. Ko <raymond.w.ko '__@__at@yahoo.com__@__' gmail.com>
 " Maintainer:	Marcus Aurelius Farias <marcus.cf 'at' bol.com.br>
 " First Author:	Max Ischenko <mfi 'at' ukr.net>
-" Last Change:	2012 Dec 04
+" Last Change:	2013 Apr 11
 
 " Only load this indent file when no other was loaded.
 if exists("b:did_indent")
@@ -67,6 +67,14 @@ function! GetLuaIndent()
         let ind = ind - &shiftwidth
     endif
 
+    " if the previous line is a comment, then we don't need to check if
+    " parentheses are unbalanced, just used to computed indent
+    if match(prev_line, '^\s*--.*$') != -1
+        return ind
+    endif
+
+    " below code tries to find unbalanced parentheses and determine special
+    " indenting amounts so argument line up nicely
     let num_parens = 0
     let text_after_paren = 0
     let after_left_index = 0
